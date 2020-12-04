@@ -1,0 +1,252 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Sample Student API
+  description: 
+
+servers:
+  - url: http://127.0.0.1/api/v1
+
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        
+      example:
+        id: 5ebac534954b54139806c112
+        email: azar@example.com
+        name: Azhar
+       
+
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+
+  responses:
+    DuplicateEmail:
+      description: Email already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Email already taken
+    
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: Not found
+
+#  ----- Added lines  ----------------------------------------
+paths:
+  /student:
+    get:
+     description: Returns a list of student 
+     responses:
+        '200':
+          description: Successfully returns a list of students
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  totalResults:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+    post:
+      description: Create a new student entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Successfully returns updated student
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+        '400':
+          description: Failed to update student
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                        code:
+                          type: string
+                        message:
+                          type: string
+                        stack:
+                          type: string   
+        
+  /student/{studentId}:
+    get:
+     description: Returns a student 
+     parameters:
+        - name: studentId
+          in: path
+          required: true
+          description: Limits the number of items on a page
+          schema:
+            type: string
+     responses:
+        '200':
+          description: Successfully returns a student
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  totalResults:
+                    type: integer
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+      
+    put:
+      description: Update student entity
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          description: Student id
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object 
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Successfully returns updated student
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+        '400':
+          description: Failed to update student
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                        code:
+                          type: string
+                        message:
+                          type: string
+                        stack:
+                          type: string         
+    delete:
+      description: Delete a student entity
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          description: Student id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delete id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+        '400':
+          description: Failed to delete student
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                        code:
+                          type: string
+                        message:
+                          type: string
+                        stack:
+                          type: string
